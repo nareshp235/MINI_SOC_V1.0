@@ -1,0 +1,921 @@
+# MINI_SOC_PROJECT_ROADMAP_v1.0
+
+# 1. Project Objective
+
+Build and verify a complete Mini SoC using SystemVerilog.
+
+Primary Goal:
+
+```
+Learn SoC Verification Concepts
+```
+
+Secondary Goal:
+
+```
+Learn RTL Design Concepts
+```
+
+The project shall progress from:
+
+```
+Registers
+    ↓
+APB
+    ↓
+Verification
+    ↓
+Multiple IPs
+    ↓
+Integration
+    ↓
+AXI-Lite
+    ↓
+SoC Verification
+    ↓
+UVM Migration
+```
+
+---
+
+# 2. Learning Roadmap
+
+The roadmap is divided into 5 major stages.
+
+Stage-1
+
+```
+Foundation
+```
+
+Stage-2
+
+```
+Block-Level Verification
+```
+
+Stage-3
+
+```
+Integration Verification
+```
+
+Stage-4
+
+```
+SoC Verification
+```
+
+Stage-5
+
+```
+UVM Migration
+```
+
+---
+
+# 3. Stage-1 Foundation
+
+## Objective
+
+Learn register verification fundamentals.
+
+---
+
+# Phase-1
+
+APB Interface
+
+Deliverables:
+
+```
+apb_if.sv
+```
+
+Learn:
+
+```
+APB protocol
+```
+
+Concepts:
+
+```
+Setup Phase
+Access Phase
+Read
+Write
+```
+
+Success Criteria:
+
+```
+APB timing fully understood
+```
+
+---
+
+# Phase-2
+
+GPIO RTL
+
+Deliverables:
+
+```
+gpio_apb.sv
+```
+
+Registers:
+
+```
+GPIO_CTRL
+GPIO_DIR
+GPIO_DATA_OUT
+GPIO_DATA_IN
+GPIO_STATUS
+```
+
+Learn:
+
+```
+Register implementation
+```
+
+Concepts:
+
+```
+RW
+RO
+RW1C
+```
+
+Success Criteria:
+
+```
+GPIO simulation works
+```
+
+---
+
+# Phase-3
+
+APB Master BFM
+
+Deliverables:
+
+```
+apb_master_bfm.sv
+```
+
+Tasks:
+
+```
+apb_write()
+apb_read()
+```
+
+Learn:
+
+```
+Bus Functional Modeling
+```
+
+Success Criteria:
+
+```
+Register accesses automated
+```
+
+---
+
+# Phase-4
+
+GPIO Verification
+
+Tests:
+
+```
+GPIO_001
+GPIO_002
+GPIO_003
+GPIO_004
+```
+
+Learn:
+
+```
+Register verification
+```
+
+Concepts:
+
+```
+Reset testing
+Read/write testing
+RO testing
+```
+
+Success Criteria:
+
+```
+All GPIO tests pass
+```
+
+---
+
+# 4. Stage-2 Block Verification
+
+## Objective
+
+Learn hardware-generated behavior.
+
+---
+
+# Phase-5
+
+Timer RTL
+
+Deliverables:
+
+```
+timer_apb.sv
+```
+
+Learn:
+
+```
+Counters
+```
+
+Concepts:
+
+```
+Hardware-updated registers
+```
+
+Success Criteria:
+
+```
+Timer counts correctly
+```
+
+---
+
+# Phase-6
+
+Timer Verification
+
+Tests:
+
+```
+TIMER_001 → TIMER_008
+```
+
+Learn:
+
+```
+Status verification
+```
+
+Concepts:
+
+```
+Timeout
+Interrupt
+```
+
+Success Criteria:
+
+```
+Timer regression passes
+```
+
+---
+
+# Phase-7
+
+DMA RTL
+
+Deliverables:
+
+```
+dma_apb.sv
+```
+
+Learn:
+
+```
+State Machines
+```
+
+Concepts:
+
+```
+IDLE
+BUSY
+DONE
+ERROR
+```
+
+Success Criteria:
+
+```
+DMA FSM works
+```
+
+---
+
+# Phase-8
+
+DMA Verification
+
+Tests:
+
+```
+DMA_001 → DMA_008
+```
+
+Learn:
+
+```
+State verification
+```
+
+Concepts:
+
+```
+FSM checking
+```
+
+Success Criteria:
+
+```
+DMA regression passes
+```
+
+---
+
+# 5. Stage-3 Verification Infrastructure
+
+## Objective
+
+Learn professional verification architecture.
+
+---
+
+# Phase-9
+
+APB Monitor
+
+Deliverables:
+
+```
+apb_monitor.sv
+```
+
+Learn:
+
+```
+Passive observation
+```
+
+Concepts:
+
+```
+Transaction extraction
+```
+
+Success Criteria:
+
+```
+Monitor captures transactions
+```
+
+---
+
+# Phase-10
+
+Transaction Classes
+
+Deliverables:
+
+```
+apb_transaction.sv
+```
+
+Learn:
+
+```
+Transaction-level verification
+```
+
+Concepts:
+
+```
+Abstraction
+```
+
+Success Criteria:
+
+```
+Bus activity represented as objects
+```
+
+---
+
+# Phase-11
+
+Scoreboard
+
+Deliverables:
+
+```
+scoreboard.sv
+```
+
+Learn:
+
+```
+Prediction
+```
+
+Concepts:
+
+```
+Expected vs Actual
+```
+
+Success Criteria:
+
+```
+Automatic checking enabled
+```
+
+---
+
+# Phase-12
+
+Coverage
+
+Deliverables:
+
+```
+coverage.sv
+```
+
+Learn:
+
+```
+Coverage-driven verification
+```
+
+Concepts:
+
+```
+Covergroups
+Coverpoints
+Cross Coverage
+```
+
+Success Criteria:
+
+```
+Coverage report generated
+```
+
+---
+
+# Phase-13
+
+Assertions
+
+Deliverables:
+
+```
+apb_assertions.sv
+```
+
+Learn:
+
+```
+Protocol checking
+```
+
+Concepts:
+
+```
+SVA
+```
+
+Success Criteria:
+
+```
+APB assertions pass
+```
+
+---
+
+# 6. Stage-4 Integration Verification
+
+## Objective
+
+Learn SoC integration concepts.
+
+---
+
+# Phase-14
+
+APB Decoder
+
+Deliverables:
+
+```
+apb_decoder.sv
+```
+
+Learn:
+
+```
+Address decoding
+```
+
+Concepts:
+
+```
+Slave selection
+```
+
+Success Criteria:
+
+```
+Correct peripheral selection
+```
+
+---
+
+# Phase-15
+
+Mini SoC Top
+
+Deliverables:
+
+```
+mini_soc_top.sv
+```
+
+Contains:
+
+```
+GPIO
+TIMER
+DMA
+```
+
+Learn:
+
+```
+Integration
+```
+
+Success Criteria:
+
+```
+Full APB SoC operational
+```
+
+---
+
+# Phase-16
+
+Integration Verification
+
+Tests:
+
+```
+SOC_001
+SOC_002
+SOC_003
+```
+
+Learn:
+
+```
+Multi-IP verification
+```
+
+Concepts:
+
+```
+Concurrent operation
+```
+
+Success Criteria:
+
+```
+Integration tests pass
+```
+
+---
+
+# Phase-17
+
+Interrupt Verification
+
+Tests:
+
+```
+IRQ_001
+IRQ_002
+IRQ_003
+IRQ_004
+```
+
+Learn:
+
+```
+Interrupt architecture
+```
+
+Concepts:
+
+```
+Assert
+Deassert
+Clear
+```
+
+Success Criteria:
+
+```
+Interrupt tests pass
+```
+
+---
+
+# 7. Stage-5 AXI-Lite Verification
+
+## Objective
+
+Learn SoC bus architecture.
+
+---
+
+# Phase-18
+
+AXI-Lite Interface
+
+Deliverables:
+
+```
+axi_lite_if.sv
+```
+
+Learn:
+
+```
+AXI channels
+```
+
+Concepts:
+
+```
+AW
+W
+B
+AR
+R
+```
+
+Success Criteria:
+
+```
+Interface complete
+```
+
+---
+
+# Phase-19
+
+AXI-Lite BFM
+
+Deliverables:
+
+```
+axi_master_bfm.sv
+```
+
+Learn:
+
+```
+AXI transactions
+```
+
+Success Criteria:
+
+```
+AXI reads/writes work
+```
+
+---
+
+# Phase-20
+
+AXI-to-APB Bridge RTL
+
+Deliverables:
+
+```
+axi2apb_bridge.sv
+```
+
+Learn:
+
+```
+Protocol conversion
+```
+
+Success Criteria:
+
+```
+AXI accesses APB peripherals
+```
+
+---
+
+# Phase-21
+
+AXI Verification
+
+Tests:
+
+```
+AXI_001 → AXI_006
+```
+
+Learn:
+
+```
+AXI protocol verification
+```
+
+Success Criteria:
+
+```
+AXI regression passes
+```
+
+---
+
+# Phase-22
+
+Bridge Verification
+
+Learn:
+
+```
+End-to-End verification
+```
+
+Path:
+
+```
+AXI → Bridge → APB → Register
+```
+
+Success Criteria:
+
+```
+Data integrity verified
+```
+
+---
+
+# 8. Final Signoff Stage
+
+## Phase-23
+
+Full Regression
+
+Execute:
+
+```
+All tests
+```
+
+Expected:
+
+```
+100% pass
+```
+
+---
+
+## Phase-24
+
+Coverage Closure
+
+Verify:
+
+```
+Coverage goals achieved
+```
+
+Expected:
+
+```
+>=95% Functional Coverage
+```
+
+---
+
+## Phase-25
+
+Project Signoff
+
+Deliverables:
+
+```
+RTL
+
+Testbench
+
+Coverage Report
+
+Regression Report
+
+Documentation
+```
+
+---
+
+# 9. UVM Migration Roadmap
+
+Only after project signoff.
+
+Convert:
+
+```
+APB BFM
+    ↓
+UVM Driver
+
+APB Monitor
+    ↓
+UVM Monitor
+
+Transaction
+    ↓
+Sequence Item
+
+Tests
+    ↓
+Sequences
+
+Scoreboard
+    ↓
+UVM Scoreboard
+
+Registers
+    ↓
+UVM RAL
+```
+
+Objective:
+
+```
+Understand UVM through an already working environment.
+```
+
+---
+
+# 10. Final Learning Outcomes
+
+Upon completion the engineer shall understand:
+
+✓ Register Verification
+
+✓ APB Protocol
+
+✓ AXI-Lite Protocol
+
+✓ Bus Functional Models
+
+✓ Monitors
+
+✓ Scoreboards
+
+✓ Functional Coverage
+
+✓ Assertions
+
+✓ Interrupt Verification
+
+✓ Address Decoding
+
+✓ Integration Verification
+
+✓ SoC Verification
+
+✓ UVM Migration
+
+End of Document

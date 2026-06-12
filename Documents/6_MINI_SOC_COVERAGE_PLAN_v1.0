@@ -1,0 +1,756 @@
+# MINI_SOC_COVERAGE_PLAN_v1.0
+
+# 1. Introduction
+
+## Purpose
+
+This document defines the functional coverage strategy for the Mini SoC verification environment.
+
+Coverage is used to measure:
+
+* Verification completeness
+* Feature exercise
+* Scenario exercise
+* Protocol exercise
+
+Coverage shall complement, but not replace, checking.
+
+Passing tests alone shall not be considered sufficient verification.
+
+---
+
+# 2. Coverage Goals
+
+## Overall Coverage Goal
+
+Target Functional Coverage:
+
+```
+>= 95%
+```
+
+Target Code Coverage:
+
+```
+>= 90%
+```
+
+Coverage Categories:
+
+* Register Coverage
+* Field Coverage
+* APB Coverage
+* AXI Coverage
+* Interrupt Coverage
+* DMA State Coverage
+* Error Coverage
+* Cross Coverage
+
+---
+
+# 3. Register Coverage
+
+## Objective
+
+Verify every register is accessed.
+
+---
+
+## Registers To Cover
+
+GPIO
+
+```
+GPIO_CTRL
+GPIO_DIR
+GPIO_DATA_OUT
+GPIO_DATA_IN
+GPIO_STATUS
+```
+
+TIMER
+
+```
+TIMER_CTRL
+TIMER_LOAD
+TIMER_COUNT
+TIMER_STATUS
+```
+
+DMA
+
+```
+DMA_CTRL
+DMA_SRC_ADDR
+DMA_DST_ADDR
+DMA_SIZE
+DMA_STATUS
+```
+
+---
+
+## Coverage Requirement
+
+Each register must observe:
+
+* Read Access
+* Write Access (if writable)
+
+Coverage Goal:
+
+```
+100%
+```
+
+---
+
+# 4. Register Field Coverage
+
+## Objective
+
+Verify all field values are exercised.
+
+---
+
+# GPIO_CTRL
+
+Fields:
+
+```
+enable
+irq_enable
+```
+
+Bins:
+
+```
+0
+1
+```
+
+Coverage Goal:
+
+```
+Both values hit
+```
+
+---
+
+# GPIO_DIR
+
+Fields:
+
+```
+direction[7:0]
+```
+
+Bins:
+
+```
+0x00
+0xFF
+Walking 1
+Walking 0
+```
+
+Coverage Goal:
+
+```
+All bins hit
+```
+
+---
+
+# TIMER_CTRL
+
+Fields:
+
+```
+enable
+periodic
+```
+
+Bins:
+
+```
+00
+01
+10
+11
+```
+
+Coverage Goal:
+
+```
+All combinations hit
+```
+
+---
+
+# DMA_CTRL
+
+Fields:
+
+```
+start
+irq_enable
+```
+
+Bins:
+
+```
+00
+01
+10
+11
+```
+
+Coverage Goal:
+
+```
+All combinations hit
+```
+
+---
+
+# 5. Access-Type Coverage
+
+## Objective
+
+Verify all register access types.
+
+Access Types:
+
+RW
+
+RO
+
+RW1C
+
+---
+
+## Coverage Bins
+
+RW Read
+
+RW Write
+
+RO Read
+
+RO Write Attempt
+
+RW1C Set
+
+RW1C Clear
+
+Coverage Goal:
+
+```
+All bins covered
+```
+
+---
+
+# 6. APB Protocol Coverage
+
+## Objective
+
+Verify APB protocol usage.
+
+---
+
+## Transaction Type Coverage
+
+Bins:
+
+Write
+
+Read
+
+Coverage Goal:
+
+```
+Both covered
+```
+
+---
+
+## Address Coverage
+
+Bins:
+
+GPIO Region
+
+TIMER Region
+
+DMA Region
+
+Invalid Region
+
+Coverage Goal:
+
+```
+All bins covered
+```
+
+---
+
+## Error Coverage
+
+Bins:
+
+Valid Access
+
+Invalid Access
+
+Coverage Goal:
+
+```
+Both covered
+```
+
+---
+
+## Transfer Sequence Coverage
+
+Bins:
+
+Read→Read
+
+Write→Write
+
+Read→Write
+
+Write→Read
+
+Coverage Goal:
+
+```
+All bins covered
+```
+
+---
+
+# 7. AXI-Lite Coverage
+
+## Objective
+
+Verify AXI-Lite protocol activity.
+
+---
+
+## Transaction Type Coverage
+
+Bins:
+
+AXI Read
+
+AXI Write
+
+Coverage Goal:
+
+```
+Both covered
+```
+
+---
+
+## Response Coverage
+
+Bins:
+
+OKAY
+
+SLVERR
+
+Coverage Goal:
+
+```
+All bins covered
+```
+
+---
+
+## Channel Coverage
+
+Channels:
+
+AW
+
+W
+
+B
+
+AR
+
+R
+
+Coverage Goal:
+
+```
+Every channel exercised
+```
+
+---
+
+# 8. Interrupt Coverage
+
+## Objective
+
+Verify all interrupt sources.
+
+---
+
+## Interrupt Sources
+
+GPIO
+
+TIMER
+
+DMA
+
+Coverage Goal:
+
+```
+Every interrupt triggered
+```
+
+---
+
+## Interrupt Actions
+
+Bins:
+
+Assert
+
+Deassert
+
+Clear
+
+Coverage Goal:
+
+```
+All bins covered
+```
+
+---
+
+# 9. Timer Coverage
+
+## Objective
+
+Verify timer operating modes.
+
+---
+
+## Mode Coverage
+
+Bins:
+
+Disabled
+
+One-Shot
+
+Periodic
+
+Coverage Goal:
+
+```
+All modes exercised
+```
+
+---
+
+## Timeout Coverage
+
+Bins:
+
+Single Timeout
+
+Multiple Timeouts
+
+Coverage Goal:
+
+```
+All bins covered
+```
+
+---
+
+# 10. DMA Coverage
+
+## Objective
+
+Verify DMA state machine behavior.
+
+---
+
+## State Coverage
+
+States:
+
+IDLE
+
+BUSY
+
+DONE
+
+ERROR
+
+Coverage Goal:
+
+```
+Every state visited
+```
+
+---
+
+## State Transition Coverage
+
+Bins:
+
+IDLE → BUSY
+
+BUSY → DONE
+
+BUSY → ERROR
+
+DONE → IDLE
+
+ERROR → IDLE
+
+Coverage Goal:
+
+```
+All transitions covered
+```
+
+---
+
+# 11. Error Coverage
+
+## Objective
+
+Verify error scenarios.
+
+---
+
+## APB Errors
+
+Bins:
+
+Invalid Address
+
+Coverage Goal:
+
+```
+Covered
+```
+
+---
+
+## AXI Errors
+
+Bins:
+
+SLVERR Response
+
+Coverage Goal:
+
+```
+Covered
+```
+
+---
+
+## DMA Errors
+
+Bins:
+
+DMA Error State
+
+Coverage Goal:
+
+```
+Covered
+```
+
+---
+
+# 12. Cross Coverage
+
+## Objective
+
+Verify important feature combinations.
+
+---
+
+## Interrupt Cross
+
+Cross:
+
+Interrupt Source
+
+×
+
+Interrupt Clear
+
+Coverage Goal:
+
+```
+Full Cross
+```
+
+---
+
+## APB Cross
+
+Cross:
+
+Address Region
+
+×
+
+Read/Write
+
+Coverage Goal:
+
+```
+Full Cross
+```
+
+---
+
+## AXI Cross
+
+Cross:
+
+Transaction Type
+
+×
+
+Response Type
+
+Coverage Goal:
+
+```
+Full Cross
+```
+
+---
+
+## Timer Cross
+
+Cross:
+
+Enable
+
+×
+
+Periodic
+
+Coverage Goal:
+
+```
+Full Cross
+```
+
+---
+
+## DMA Cross
+
+Cross:
+
+State
+
+×
+
+Interrupt
+
+Coverage Goal:
+
+```
+Full Cross
+```
+
+---
+
+# 13. Coverage Exclusions
+
+The following are excluded:
+
+* Reserved register bits
+* Undefined DMA states
+* Illegal protocol sequences intentionally prevented by BFM
+
+---
+
+# 14. Coverage Closure Criteria
+
+Coverage closure achieved when:
+
+Register Coverage
+
+```
+100%
+```
+
+Register Field Coverage
+
+```
+100%
+```
+
+APB Coverage
+
+```
+>=95%
+```
+
+AXI Coverage
+
+```
+>=95%
+```
+
+Interrupt Coverage
+
+```
+100%
+```
+
+DMA State Coverage
+
+```
+100%
+```
+
+Overall Functional Coverage
+
+```
+>=95%
+```
+
+---
+
+# 15. Coverage Review Checklist
+
+Before signoff verify:
+
+✓ All registers accessed
+
+✓ All register fields exercised
+
+✓ All APB transaction types covered
+
+✓ All AXI transaction types covered
+
+✓ All interrupts covered
+
+✓ All DMA states covered
+
+✓ All major cross coverage bins covered
+
+✓ Coverage goals achieved
+
+End of Document

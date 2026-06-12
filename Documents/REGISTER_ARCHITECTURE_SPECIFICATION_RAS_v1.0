@@ -30,27 +30,12 @@ For each register, the following information is specified:
 
 # 3. GPIO Register Architecture
 
-Base Address:
-
-```
-0x0000_0000
-```
-
----
+Base Address: 0x0000_0000
 
 ## 3.1 GPIO_CTRL
 
-Address:
-
-```
-0x0000_0000
-```
-
-Reset Value:
-
-```
-0x00000000
-```
+Address: 0x0000_0000
+Reset Value: 0x00000000
 
 ### Register Layout
 
@@ -62,35 +47,22 @@ Reset Value:
 
 ### Field Description
 
-enable
+enable :
 
-```
 1 = GPIO enabled
 0 = GPIO disabled
-```
 
-irq_enable
+irq_enable :
 
-```
 1 = Interrupt generation enabled
 0 = Interrupt generation disabled
-```
 
 ---
 
 ## 3.2 GPIO_DIR
 
-Address:
-
-```
-0x0000_0004
-```
-
-Reset Value:
-
-```
-0x00000000
-```
+Address: 0x0000_0004
+Reset Value: 0x00000000
 
 ### Register Layout
 
@@ -101,28 +73,17 @@ Reset Value:
 
 ### Field Description
 
-direction[n]
+direction[n] :
 
-```
 1 = Output
 0 = Input
-```
 
 ---
 
 ## 3.3 GPIO_DATA_OUT
 
-Address:
-
-```
-0x0000_0008
-```
-
-Reset Value:
-
-```
-0x00000000
-```
+Address: 0x0000_0008
+Reset Value: 0x00000000
 
 ### Register Layout
 
@@ -139,17 +100,8 @@ Value driven to output pins.
 
 ## 3.4 GPIO_DATA_IN
 
-Address:
-
-```
-0x0000_000C
-```
-
-Reset Value:
-
-```
-Dynamic
-```
+Address: 0x0000_000C
+Reset Value: Dynamic
 
 ### Register Layout
 
@@ -168,17 +120,8 @@ Updated by hardware.
 
 ## 3.5 GPIO_STATUS
 
-Address:
-
-```
-0x0000_0010
-```
-
-Reset Value:
-
-```
-0x00000000
-```
+Address: 0x0000_0010
+Reset Value: 0x00000000
 
 ### Register Layout
 
@@ -193,23 +136,13 @@ irq_pending
 
 Set by hardware event.
 
-Cleared by software writing:
-
-```
-bit[0] = 1
-```
+Cleared by software writing: bit[0] = 1
 
 Writing 0 has no effect.
 
----
-
 # 4. TIMER Register Architecture
 
-Base Address:
-
-```
-0x0000_1000
-```
+Base Address: 0x0000_1000
 
 ---
 
@@ -538,23 +471,11 @@ Software Write:
 0x00000001
 ```
 
-Result:
+Result: timeout = 0
 
-```
-timeout = 0
-```
+Software Write: 0x00000000
 
-Software Write:
-
-```
-0x00000000
-```
-
-Result:
-
-```
-timeout remains unchanged
-```
+Result: timeout remains unchanged
 
 ---
 

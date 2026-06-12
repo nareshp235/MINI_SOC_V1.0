@@ -1,0 +1,286 @@
+Purpose
+
+Provide an APB-accessible GPIO peripheral supporting:
+
+Control registers
+Configuration registers
+Status registers
+Interrupt generation
+External View
+                 +------------------+
+                 |    GPIO APB IP   |
+                 |                  |
+ APB Slave ----->|                  |
+                 |                  |
+ gpio_in[7:0] -->|                  |
+                 |                  |
+ gpio_out[7:0]<--|                  |
+                 |                  |
+ gpio_irq   <----|                  |
+                 +------------------+
+Register Map
+Offset	Register	Type
+0x00	GPIO_CTRL	RW
+0x04	GPIO_DIR	RW
+0x08	GPIO_DATA_OUT	RW
+0x0C	GPIO_DATA_IN	RO
+0x10	GPIO_STATUS	RW1C
+Internal Register Bank
+
+Inside RTL:
+
+logic [31:0] gpio_ctrl_reg;
+logic [31:0] gpio_dir_reg;
+logic [31:0] gpio_data_out_reg;
+logic [31:0] gpio_status_reg;
+
+Notice:
+
+GPIO_DATA_IN
+
+is NOT stored.
+
+It comes directly from:
+
+gpio_in[7:0]
+
+This is our first RO register.
+
+Register Reset Values
+Register	Reset
+GPIO_CTRL	0
+GPIO_DIR	0
+GPIO_DATA_OUT	0
+GPIO_STATUS	0
+GPIO_CTRL
+
+Address:
+
+0x00
+
+Fields:
+
+bit0 enable
+bit1 irq_enable
+Behavior
+
+Enable GPIO:
+
+gpio_ctrl_reg[0]
+
+Enable Interrupt:
+
+gpio_ctrl_reg[1]
+GPIO_DIR
+
+Address:
+
+0x04
+
+Fields:
+
+bit[7:0]
+
+Meaning:
+
+1 = Output
+0 = Input
+
+Example
+
+0xAA
+
+10101010
+
+Even pins output.
+
+Odd pins input.
+
+GPIO_DATA_OUT
+
+Address:
+
+0x08
+
+Fields:
+
+bit[7:0]
+
+Value driven to outputs.
+
+Example
+
+GPIO_DIR      = 0xFF
+GPIO_DATA_OUT = 0x55
+
+Output:
+
+gpio_out = 01010101
+GPIO_DATA_IN
+
+Address:
+
+0x0C
+
+RO register.
+
+Read Behavior
+
+PRDATA = {24'h0,gpio_in};
+
+No storage element.
+
+Always reflects external pins.
+
+GPIO_STATUS
+
+Address:
+
+0x10
+
+Fields:
+
+bit0 irq_pending
+
+Type:
+
+RW1C
+First Interrupt Event
+
+To keep project simple:
+
+Interrupt event occurs when:
+
+gpio_in != previous_gpio_in
+
+Any pin transition.
+
+Example
+
+gpio_in
+
+00000000
+
+↓
+
+00000100
+
+Hardware sets:
+
+gpio_status_reg[0] <= 1'b1;
+RW1C Behavior
+
+Software clears:
+
+Write:
+
+0x00000001
+
+Result:
+
+gpio_status_reg[0] <= 0;
+
+Writing:
+
+0
+
+does nothing.
+
+Interrupt Generation
+
+Condition:
+
+gpio_irq =
+        gpio_ctrl_reg[1]
+    &&  gpio_status_reg[0];
+
+Meaning:
+
+irq_enable
+AND
+irq_pending
+APB Write Decode
+
+Allowed Writes
+
+GPIO_CTRL
+GPIO_DIR
+GPIO_DATA_OUT
+GPIO_STATUS (RW1C)
+
+Illegal Writes
+
+GPIO_DATA_IN
+
+ignored.
+
+APB Read Decode
+
+Read:
+
+GPIO_CTRL
+GPIO_DIR
+GPIO_DATA_OUT
+GPIO_DATA_IN
+GPIO_STATUS
+Invalid Address
+
+Example
+
+0x14
+0x18
+0x1C
+
+Return:
+
+pslverr = 1;
+APB Timing Assumption
+
+Version-1:
+
+PREADY = 1
+
+always.
+
+No wait states.
+
+Internal Blocks
+
+Conceptually:
+
+                +----------------+
+                | Address Decode |
+                +--------+-------+
+                         |
+          +--------------+--------------+
+          |                             |
+          v                             v
+
+    Write Logic                  Read Logic
+
+          |                             |
+          +--------------+--------------+
+                         |
+                  Register Bank
+                         |
+                  Interrupt Logic
+                         |
+                      gpio_irq
+Verification Concepts Learned From GPIO
+
+This single IP introduces:
+
+RW Registers
+GPIO_CTRL
+GPIO_DIR
+GPIO_DATA_OUT
+RO Register
+GPIO_DATA_IN
+RW1C Register
+GPIO_STATUS
+Interrupt Verification
+gpio_irq
+APB Register Access
+Read
+Write
+Invalid Address

@@ -1,0 +1,580 @@
+# MINI_SOC_VERIFICATION_PLAN_v1.0
+
+## 1. Introduction
+
+### Purpose
+
+This document defines the verification strategy and verification objectives for the Mini SoC.
+
+The purpose of verification is to ensure:
+
+* Functional correctness
+* Register correctness
+* Bus protocol compliance
+* Interrupt functionality
+* Error handling
+* SoC integration correctness
+
+---
+
+# 2. Verification Scope
+
+The following blocks are included in verification scope.
+
+| Block               | Verification Scope |
+| ------------------- | ------------------ |
+| GPIO                | Included           |
+| TIMER               | Included           |
+| DMA                 | Included           |
+| APB Interface       | Included           |
+| AXI-Lite Interface  | Included           |
+| APB Address Decoder | Included           |
+| AXI-to-APB Bridge   | Included           |
+| Interrupt Logic     | Included           |
+
+---
+
+# 3. Verification Methodology
+
+Verification shall be performed using SystemVerilog.
+
+The environment shall contain:
+
+* Driver/BFM
+* Monitor
+* Scoreboard
+* Assertions
+* Functional Coverage
+
+Verification shall proceed in phases:
+
+Phase-1
+
+```
+RTL + Directed Tests
+```
+
+Phase-2
+
+```
+Monitor + Scoreboard
+```
+
+Phase-3
+
+```
+Functional Coverage
+```
+
+Phase-4
+
+```
+Assertions
+```
+
+Phase-5
+
+```
+Full SoC Integration
+```
+
+---
+
+# 4. Reset Verification
+
+## Objective
+
+Verify correct behavior after reset.
+
+### Features
+
+Verify:
+
+* All registers reset correctly
+* Interrupts deasserted
+* DMA enters IDLE state
+* APB interface returns default values
+
+### Success Criteria
+
+All reset values match RAS specification.
+
+---
+
+# 5. GPIO Verification
+
+## Feature: GPIO Enable
+
+### Objective
+
+Verify GPIO enable control.
+
+### Checks
+
+* Enable bit writable
+* Disable bit writable
+* Readback correct
+
+---
+
+## Feature: GPIO Direction
+
+### Objective
+
+Verify direction configuration.
+
+### Checks
+
+* All direction bits programmable
+* Readback correct
+
+---
+
+## Feature: GPIO Data Output
+
+### Objective
+
+Verify output data register.
+
+### Checks
+
+* Write operation
+* Readback operation
+* Output pin update
+
+---
+
+## Feature: GPIO Data Input
+
+### Objective
+
+Verify input data register.
+
+### Checks
+
+* External pin changes reflected
+* Register updates correctly
+
+---
+
+## Feature: GPIO Interrupt
+
+### Objective
+
+Verify interrupt generation.
+
+### Checks
+
+* Status bit set
+* Interrupt asserted
+* Interrupt cleared via RW1C
+
+---
+
+# 6. TIMER Verification
+
+## Feature: Timer Enable
+
+### Objective
+
+Verify timer start operation.
+
+### Checks
+
+* Counter starts decrementing
+* Counter stops when disabled
+
+---
+
+## Feature: Timer Countdown
+
+### Objective
+
+Verify countdown operation.
+
+### Checks
+
+* Count decrements each cycle
+* No skipped counts
+
+---
+
+## Feature: One-Shot Mode
+
+### Objective
+
+Verify single timeout generation.
+
+### Checks
+
+* Timeout asserted once
+* Counter stops
+
+---
+
+## Feature: Periodic Mode
+
+### Objective
+
+Verify automatic reload.
+
+### Checks
+
+* Reload occurs
+* Multiple timeout events occur
+
+---
+
+## Feature: Timer Interrupt
+
+### Objective
+
+Verify timeout interrupt.
+
+### Checks
+
+* Timeout bit set
+* Interrupt asserted
+* Interrupt clear operation
+
+---
+
+# 7. DMA Verification
+
+## Feature: DMA Start
+
+### Objective
+
+Verify DMA start command.
+
+### Checks
+
+* Start bit accepted
+* State changes to BUSY
+
+---
+
+## Feature: DMA Busy State
+
+### Objective
+
+Verify BUSY indication.
+
+### Checks
+
+* Busy bit asserted
+* Busy bit cleared after completion
+
+---
+
+## Feature: DMA Completion
+
+### Objective
+
+Verify DONE state.
+
+### Checks
+
+* DONE bit asserted
+* Interrupt generated
+
+---
+
+## Feature: DMA Error
+
+### Objective
+
+Verify ERROR state.
+
+### Checks
+
+* Error bit asserted
+* Error bit cleared through RW1C
+
+---
+
+# 8. APB Protocol Verification
+
+## Feature: APB Write
+
+### Objective
+
+Verify APB write transactions.
+
+### Checks
+
+* Correct address phase
+* Correct enable phase
+* Register updated
+
+---
+
+## Feature: APB Read
+
+### Objective
+
+Verify APB read transactions.
+
+### Checks
+
+* Correct address phase
+* Correct data return
+
+---
+
+## Feature: Back-to-Back Transactions
+
+### Objective
+
+Verify sequential accesses.
+
+### Checks
+
+* No data corruption
+* Correct responses
+
+---
+
+## Feature: Invalid Address
+
+### Objective
+
+Verify illegal access handling.
+
+### Checks
+
+* PSLVERR asserted
+* No register corruption
+
+---
+
+# 9. Address Decoder Verification
+
+## Feature: GPIO Decode
+
+### Objective
+
+Verify GPIO address selection.
+
+### Checks
+
+* GPIO selected only for valid addresses
+
+---
+
+## Feature: TIMER Decode
+
+### Objective
+
+Verify TIMER address selection.
+
+### Checks
+
+* TIMER selected only for valid addresses
+
+---
+
+## Feature: DMA Decode
+
+### Objective
+
+Verify DMA address selection.
+
+### Checks
+
+* DMA selected only for valid addresses
+
+---
+
+## Feature: Invalid Decode
+
+### Objective
+
+Verify invalid region handling.
+
+### Checks
+
+* No slave selected
+* Error response generated
+
+---
+
+# 10. AXI-Lite Verification
+
+## Feature: AXI Write Channel
+
+### Objective
+
+Verify write transactions.
+
+### Checks
+
+* AW channel handshake
+* W channel handshake
+* B response generation
+
+---
+
+## Feature: AXI Read Channel
+
+### Objective
+
+Verify read transactions.
+
+### Checks
+
+* AR channel handshake
+* R channel handshake
+
+---
+
+## Feature: Error Response
+
+### Objective
+
+Verify invalid address response.
+
+### Checks
+
+* SLVERR response returned
+
+---
+
+# 11. AXI-to-APB Bridge Verification
+
+## Objective
+
+Verify protocol conversion.
+
+### Checks
+
+AXI Write
+
+```
+Generates APB write
+```
+
+AXI Read
+
+```
+Generates APB read
+```
+
+Address
+
+```
+Preserved correctly
+```
+
+Data
+
+```
+Preserved correctly
+```
+
+Errors
+
+```
+Propagated correctly
+```
+
+---
+
+# 12. Interrupt Verification
+
+## Objective
+
+Verify all interrupt sources.
+
+### Features
+
+GPIO Interrupt
+
+TIMER Interrupt
+
+DMA Interrupt
+
+### Checks
+
+* Assertion
+* Deassertion
+* Masking
+* Clearing
+
+---
+
+# 13. Scoreboard Requirements
+
+Scoreboard shall verify:
+
+GPIO
+
+* Control registers
+* Direction registers
+* Status registers
+
+TIMER
+
+* Control registers
+* Countdown values
+* Timeout status
+
+DMA
+
+* Configuration registers
+* State transitions
+* Status values
+
+---
+
+# 14. Assertion Requirements
+
+Assertions shall verify:
+
+APB Protocol
+
+* PENABLE only after PSEL
+* Stable address during transfer
+
+AXI-Lite Protocol
+
+* Valid/Ready handshakes
+
+Register Rules
+
+* RO registers not modified
+* RW1C behavior correct
+
+---
+
+# 15. Coverage Goals
+
+Coverage target:
+
+```
+>95%
+```
+
+Coverage categories:
+
+* Register accesses
+* Interrupts
+* APB transactions
+* AXI transactions
+* Error responses
+* State transitions
+
+---
+
+# 16. Exit Criteria
+
+Verification shall be considered complete when:
+
+* All planned tests pass
+* No open functional bugs
+* Coverage goal achieved
+* Assertions pass
+* Scoreboard clean
+* No protocol violations observed
+
+End of Document

@@ -1,0 +1,29 @@
+Step-1  APB Interface
+Step-2  GPIO RTL
+Step-3  APB Master BFM
+Step-4  GPIO Verification
+
+Step-5  Timer RTL
+Step-6  Timer Verification
+
+Step-7  DMA RTL
+Step-8  DMA Verification
+
+Step-9  APB Monitor
+Step-10 Transaction Class
+Step-11 Scoreboard
+Step-12 Coverage
+Step-13 Assertions
+
+Step-14 APB Decoder
+Step-15 SoC Top
+
+Step-16 Integration Verification
+
+Step-17 AXI Interface
+Step-18 AXI BFM
+Step-19 AXI→APB Bridge
+Step-20 AXI Verification
+
+Step-21 Full Regression
+Step-22 Coverage Closure

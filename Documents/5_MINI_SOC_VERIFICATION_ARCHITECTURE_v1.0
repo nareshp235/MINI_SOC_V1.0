@@ -1,0 +1,586 @@
+# MINI_SOC_VERIFICATION_ARCHITECTURE_v1.0
+
+# 1. Introduction
+
+## Purpose
+
+This document defines the verification architecture for the Mini SoC project.
+
+The verification environment shall be developed entirely in SystemVerilog.
+
+Objectives:
+
+* Modular architecture
+* Reusable components
+* Easy debug
+* Scalable toward UVM migration
+
+---
+
+# 2. Verification Environment Overview
+
+The verification environment shall contain:
+
+* Test Layer
+* Driver / BFM
+* Monitor
+* Scoreboard
+* Coverage Collector
+* Assertions
+* DUT
+
+Verification shall initially use directed tests and later support constrained-random testing.
+
+---
+
+# 3. High-Level Verification Architecture
+
+```
+                    +-------------+
+                    |    TEST     |
+                    +------+------+
+                           |
+                           |
+                    +------+------+
+                    | APB BFM     |
+                    +------+------+
+                           |
+                           |
+                  +--------+--------+
+                  |     DUT         |
+                  +--------+--------+
+                           |
+                           |
+                    +------+------+
+                    | APB Monitor |
+                    +------+------+
+                           |
+                 +---------+---------+
+                 |                   |
+                 |                   |
+         +-------+------+   +--------+-------+
+         | Scoreboard   |   | Coverage      |
+         +--------------+   +----------------+
+```
+
+---
+
+# 4. Verification Phases
+
+## Phase-1
+
+Components:
+
+* DUT
+* APB BFM
+* Directed Tests
+
+Purpose:
+
+Basic register verification.
+
+No monitor.
+
+No scoreboard.
+
+No coverage.
+
+---
+
+## Phase-2
+
+Components:
+
+* DUT
+* APB BFM
+* APB Monitor
+
+Purpose:
+
+Introduce passive observation.
+
+---
+
+## Phase-3
+
+Components:
+
+* DUT
+* APB BFM
+* APB Monitor
+* Scoreboard
+
+Purpose:
+
+Automated checking.
+
+---
+
+## Phase-4
+
+Components:
+
+* DUT
+* APB BFM
+* APB Monitor
+* Scoreboard
+* Coverage
+
+Purpose:
+
+Measure verification completeness.
+
+---
+
+## Phase-5
+
+Components:
+
+* AXI BFM
+* APB Monitor
+* AXI Monitor
+* Assertions
+
+Purpose:
+
+Full SoC verification.
+
+---
+
+# 5. APB Master BFM
+
+## Purpose
+
+Generate APB transactions.
+
+The BFM shall provide:
+
+* APB Write
+* APB Read
+* Reset
+
+---
+
+## Supported Tasks
+
+task apb_write();
+
+task apb_read();
+
+task apb_reset();
+
+---
+
+## Example Usage
+
+apb_write(GPIO_CTRL,32'h1);
+
+apb_read(GPIO_CTRL,data);
+
+---
+
+# 6. AXI-Lite Master BFM
+
+## Purpose
+
+Generate AXI-Lite transactions.
+
+Supported Operations:
+
+* Write Address
+* Write Data
+* Read Address
+* Read Data
+
+---
+
+## Supported Tasks
+
+task axi_write();
+
+task axi_read();
+
+---
+
+# 7. Transaction Objects
+
+Transaction objects represent bus activity.
+
+---
+
+## APB Transaction
+
+class apb_transaction;
+
+Fields:
+
+```
+addr
+write
+wdata
+rdata
+slverr
+```
+
+Methods:
+
+```
+display()
+```
+
+---
+
+## AXI Transaction
+
+class axi_transaction;
+
+Fields:
+
+```
+addr
+write
+data
+response
+```
+
+Methods:
+
+```
+display()
+```
+
+---
+
+# 8. APB Monitor
+
+## Purpose
+
+Observe APB bus activity.
+
+Monitor shall be passive.
+
+Monitor shall never drive signals.
+
+---
+
+## Information Collected
+
+Address
+
+Write Data
+
+Read Data
+
+Transfer Type
+
+Error Status
+
+---
+
+## Output
+
+Creates APB transaction objects.
+
+Sends transactions to:
+
+* Scoreboard
+* Coverage
+
+---
+
+# 9. AXI Monitor
+
+## Purpose
+
+Observe AXI-Lite activity.
+
+---
+
+## Information Collected
+
+AW Transactions
+
+W Transactions
+
+B Responses
+
+AR Transactions
+
+R Responses
+
+---
+
+## Output
+
+Creates AXI transaction objects.
+
+Sends transactions to:
+
+* Scoreboard
+* Coverage
+
+---
+
+# 10. Scoreboard
+
+## Purpose
+
+Predict expected behavior and compare against DUT behavior.
+
+---
+
+## Responsibilities
+
+Register prediction
+
+Status prediction
+
+Interrupt prediction
+
+DMA state prediction
+
+---
+
+## Inputs
+
+Monitor transactions
+
+---
+
+## Outputs
+
+PASS
+
+FAIL
+
+Error reports
+
+---
+
+# 11. Reference Model
+
+The scoreboard shall contain an internal software model.
+
+Example:
+
+gpio_ctrl_expected
+
+gpio_dir_expected
+
+timer_ctrl_expected
+
+dma_status_expected
+
+---
+
+Whenever a write occurs:
+
+Expected model updated.
+
+Whenever a read occurs:
+
+Compare DUT result against expected value.
+
+---
+
+# 12. Functional Coverage
+
+Coverage shall be collected independently from checking.
+
+Coverage failures shall not fail simulation.
+
+---
+
+## Coverage Categories
+
+Register Coverage
+
+Protocol Coverage
+
+Interrupt Coverage
+
+State Coverage
+
+Error Coverage
+
+---
+
+# 13. Assertions
+
+Assertions shall monitor protocol correctness.
+
+---
+
+## APB Assertions
+
+PENABLE requires PSEL.
+
+Address stable during transfer.
+
+Control stable during transfer.
+
+---
+
+## AXI Assertions
+
+VALID/READY handshake correctness.
+
+Response channel correctness.
+
+---
+
+## Register Assertions
+
+RO register protection.
+
+RW1C behavior.
+
+Reserved-bit behavior.
+
+---
+
+# 14. Test Structure
+
+Each testcase shall follow:
+
+1. Reset DUT
+2. Configure DUT
+3. Apply Stimulus
+4. Check Results
+5. Report PASS/FAIL
+
+---
+
+# 15. Directory Structure
+
+mini_soc/
+
+├── rtl/
+│
+├── tb/
+│   ├── interfaces/
+│   ├── bfm/
+│   ├── monitor/
+│   ├── scoreboard/
+│   ├── coverage/
+│   ├── assertions/
+│   └── common/
+│
+├── tests/
+│
+├── docs/
+│
+└── sim/
+
+---
+
+# 16. Build Flow
+
+Compile
+
+↓
+
+Elaborate
+
+↓
+
+Run Test
+
+↓
+
+Generate Log
+
+↓
+
+Generate Coverage
+
+↓
+
+Regression Summary
+
+---
+
+# 17. Debug Methodology
+
+Primary debug sources:
+
+1. Simulation Log
+
+2. Scoreboard Messages
+
+3. Assertion Failures
+
+4. Waveforms
+
+---
+
+Recommended waveform groups:
+
+APB Signals
+
+AXI Signals
+
+Register Bank
+
+Interrupts
+
+DMA State Machine
+
+---
+
+# 18. Regression Strategy
+
+Smoke Regression
+
+```
+Basic functionality
+```
+
+Block Regression
+
+```
+GPIO
+TIMER
+DMA
+```
+
+Protocol Regression
+
+```
+APB
+AXI
+```
+
+Full Regression
+
+```
+Entire test suite
+```
+
+---
+
+# 19. UVM Migration Readiness
+
+The architecture is intentionally designed so that later migration to UVM is straightforward.
+
+Mapping:
+
+APB BFM
+→ UVM Driver
+
+Monitor
+→ UVM Monitor
+
+Transaction Class
+→ Sequence Item
+
+Scoreboard
+→ UVM Scoreboard
+
+Coverage
+→ Subscriber/Coverage Collector
+
+Tests
+→ UVM Sequences
+
+End of Document

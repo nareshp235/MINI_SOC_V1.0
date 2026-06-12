@@ -1,0 +1,588 @@
+# REGISTER ARCHITECTURE SPECIFICATION (RAS_v1.0)
+
+## 1. Introduction
+
+### Purpose
+
+This document defines all programmer-visible registers implemented within the Mini SoC.
+
+For each register, the following information is specified:
+
+* Address
+* Reset value
+* Access type
+* Field definitions
+* Software behavior
+* Hardware behavior
+
+---
+
+# 2. Access Type Definitions
+
+| Type | Description            |
+| ---- | ---------------------- |
+| RW   | Read / Write           |
+| RO   | Read Only              |
+| RW1C | Read, Write 1 to Clear |
+| WO   | Write Only             |
+
+---
+
+# 3. GPIO Register Architecture
+
+Base Address:
+
+```
+0x0000_0000
+```
+
+---
+
+## 3.1 GPIO_CTRL
+
+Address:
+
+```
+0x0000_0000
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field      | Access | Reset |
+| ---- | ---------- | ------ | ----- |
+| 31:2 | Reserved   | RO     | 0     |
+| 1    | irq_enable | RW     | 0     |
+| 0    | enable     | RW     | 0     |
+
+### Field Description
+
+enable
+
+```
+1 = GPIO enabled
+0 = GPIO disabled
+```
+
+irq_enable
+
+```
+1 = Interrupt generation enabled
+0 = Interrupt generation disabled
+```
+
+---
+
+## 3.2 GPIO_DIR
+
+Address:
+
+```
+0x0000_0004
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field     | Access | Reset |
+| ---- | --------- | ------ | ----- |
+| 31:8 | Reserved  | RO     | 0     |
+| 7:0  | direction | RW     | 0     |
+
+### Field Description
+
+direction[n]
+
+```
+1 = Output
+0 = Input
+```
+
+---
+
+## 3.3 GPIO_DATA_OUT
+
+Address:
+
+```
+0x0000_0008
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field    | Access | Reset |
+| ---- | -------- | ------ | ----- |
+| 31:8 | Reserved | RO     | 0     |
+| 7:0  | data_out | RW     | 0     |
+
+### Field Description
+
+Value driven to output pins.
+
+---
+
+## 3.4 GPIO_DATA_IN
+
+Address:
+
+```
+0x0000_000C
+```
+
+Reset Value:
+
+```
+Dynamic
+```
+
+### Register Layout
+
+| Bits | Field    | Access |
+| ---- | -------- | ------ |
+| 31:8 | Reserved | RO     |
+| 7:0  | data_in  | RO     |
+
+### Field Description
+
+Reflects gpio_in pins.
+
+Updated by hardware.
+
+---
+
+## 3.5 GPIO_STATUS
+
+Address:
+
+```
+0x0000_0010
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field       | Access | Reset |
+| ---- | ----------- | ------ | ----- |
+| 31:1 | Reserved    | RO     | 0     |
+| 0    | irq_pending | RW1C   | 0     |
+
+### Field Description
+
+irq_pending
+
+Set by hardware event.
+
+Cleared by software writing:
+
+```
+bit[0] = 1
+```
+
+Writing 0 has no effect.
+
+---
+
+# 4. TIMER Register Architecture
+
+Base Address:
+
+```
+0x0000_1000
+```
+
+---
+
+## 4.1 TIMER_CTRL
+
+Address:
+
+```
+0x0000_1000
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field    | Access | Reset |
+| ---- | -------- | ------ | ----- |
+| 31:2 | Reserved | RO     | 0     |
+| 1    | periodic | RW     | 0     |
+| 0    | enable   | RW     | 0     |
+
+### Field Description
+
+enable
+
+```
+Start timer operation.
+```
+
+periodic
+
+```
+1 = Periodic mode
+0 = One-shot mode
+```
+
+---
+
+## 4.2 TIMER_LOAD
+
+Address:
+
+```
+0x0000_1004
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field      | Access |
+| ---- | ---------- | ------ |
+| 31:0 | load_value | RW     |
+
+### Field Description
+
+Initial countdown value.
+
+---
+
+## 4.3 TIMER_COUNT
+
+Address:
+
+```
+0x0000_1008
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field | Access |
+| ---- | ----- | ------ |
+| 31:0 | count | RO     |
+
+### Field Description
+
+Current counter value.
+
+Updated every clock cycle.
+
+---
+
+## 4.4 TIMER_STATUS
+
+Address:
+
+```
+0x0000_100C
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field    | Access | Reset |
+| ---- | -------- | ------ | ----- |
+| 31:1 | Reserved | RO     | 0     |
+| 0    | timeout  | RW1C   | 0     |
+
+### Field Description
+
+timeout
+
+Set when counter reaches zero.
+
+Cleared by software writing:
+
+```
+bit[0] = 1
+```
+
+---
+
+# 5. DMA Register Architecture
+
+Base Address:
+
+```
+0x0000_2000
+```
+
+---
+
+## 5.1 DMA_CTRL
+
+Address:
+
+```
+0x0000_2000
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field      | Access | Reset |
+| ---- | ---------- | ------ | ----- |
+| 31:2 | Reserved   | RO     | 0     |
+| 1    | irq_enable | RW     | 0     |
+| 0    | start      | RW     | 0     |
+
+### Field Description
+
+start
+
+Writing 1 starts DMA operation.
+
+irq_enable
+
+Enables DMA interrupt generation.
+
+---
+
+## 5.2 DMA_SRC_ADDR
+
+Address:
+
+```
+0x0000_2004
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field    | Access |
+| ---- | -------- | ------ |
+| 31:0 | src_addr | RW     |
+
+---
+
+## 5.3 DMA_DST_ADDR
+
+Address:
+
+```
+0x0000_2008
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field    | Access |
+| ---- | -------- | ------ |
+| 31:0 | dst_addr | RW     |
+
+---
+
+## 5.4 DMA_SIZE
+
+Address:
+
+```
+0x0000_200C
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field | Access |
+| ---- | ----- | ------ |
+| 31:0 | size  | RW     |
+
+---
+
+## 5.5 DMA_STATUS
+
+Address:
+
+```
+0x0000_2010
+```
+
+Reset Value:
+
+```
+0x00000000
+```
+
+### Register Layout
+
+| Bits | Field    | Access | Reset |
+| ---- | -------- | ------ | ----- |
+| 31:3 | Reserved | RO     | 0     |
+| 2    | error    | RW1C   | 0     |
+| 1    | done     | RW1C   | 0     |
+| 0    | busy     | RO     | 0     |
+
+### Field Description
+
+busy
+
+Set by hardware when DMA enters BUSY state.
+
+Cleared when transfer completes.
+
+done
+
+Set by hardware after successful completion.
+
+Cleared by software writing 1.
+
+error
+
+Set by hardware if DMA error occurs.
+
+Cleared by software writing 1.
+
+---
+
+# 6. Register Access Rules
+
+Reserved Fields
+
+All reserved bits:
+
+* Read as zero
+* Ignore writes
+
+---
+
+RO Registers
+
+Software writes shall not modify value.
+
+Examples:
+
+```
+GPIO_DATA_IN
+TIMER_COUNT
+```
+
+---
+
+RW1C Registers
+
+Software clears status by writing 1.
+
+Example:
+
+Current Value:
+
+```
+timeout = 1
+```
+
+Software Write:
+
+```
+0x00000001
+```
+
+Result:
+
+```
+timeout = 0
+```
+
+Software Write:
+
+```
+0x00000000
+```
+
+Result:
+
+```
+timeout remains unchanged
+```
+
+---
+
+# 7. Register Verification Requirements
+
+The following verification shall be performed for every register.
+
+RW Registers
+
+* Reset value test
+* Write/read test
+* Multiple write test
+
+RO Registers
+
+* Reset value test
+* Illegal write test
+* Read consistency test
+
+RW1C Registers
+
+* Hardware set test
+* Software clear test
+* Write 0 no-effect test
+
+Reserved Bits
+
+* Read as zero verification
+* Ignore write verification
+
+End of Document

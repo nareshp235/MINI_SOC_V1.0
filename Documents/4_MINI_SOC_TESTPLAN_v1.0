@@ -1,0 +1,848 @@
+# MINI_SOC_TESTPLAN_v1.0
+
+## 1. Introduction
+
+### Purpose
+
+This document defines all verification testcases required to verify the Mini SoC.
+
+The test plan provides:
+
+* Test identification
+* Test objectives
+* Test procedures
+* Expected results
+* Pass criteria
+
+---
+
+# 2. Test Classification
+
+| Category    | Test Count |
+| ----------- | ---------- |
+| Reset       | 5          |
+| GPIO        | 8          |
+| TIMER       | 8          |
+| DMA         | 8          |
+| APB         | 6          |
+| AXI-Lite    | 6          |
+| Interrupts  | 4          |
+| Integration | 5          |
+
+Total Planned Tests:
+
+```
+50
+```
+
+---
+
+# 3. Reset Tests
+
+## RESET_001
+
+### Name
+
+Global Reset Verification
+
+### Objective
+
+Verify all registers reset correctly.
+
+### Procedure
+
+1. Assert reset.
+2. Deassert reset.
+3. Read all registers.
+
+### Expected Result
+
+All registers match reset values defined in RAS.
+
+### Pass Criteria
+
+No register mismatch.
+
+---
+
+## RESET_002
+
+### Name
+
+Interrupt Reset Verification
+
+### Objective
+
+Verify all interrupts deassert after reset.
+
+### Expected Result
+
+gpio_irq = 0
+
+timer_irq = 0
+
+dma_irq = 0
+
+---
+
+## RESET_003
+
+### Name
+
+DMA State Reset
+
+### Objective
+
+Verify DMA enters IDLE state after reset.
+
+### Expected Result
+
+busy = 0
+
+done = 0
+
+error = 0
+
+---
+
+# 4. GPIO Tests
+
+## GPIO_001
+
+### Name
+
+GPIO_CTRL Write Read
+
+### Objective
+
+Verify control register access.
+
+### Procedure
+
+Write:
+
+```
+0x00000003
+```
+
+Read register.
+
+### Expected Result
+
+Read value equals written value.
+
+---
+
+## GPIO_002
+
+### Name
+
+GPIO_DIR Verification
+
+### Objective
+
+Verify direction programming.
+
+### Procedure
+
+Write:
+
+```
+0x000000AA
+```
+
+Read back.
+
+### Expected Result
+
+Direction register stores value correctly.
+
+---
+
+## GPIO_003
+
+### Name
+
+GPIO_DATA_OUT Verification
+
+### Objective
+
+Verify output data programming.
+
+### Procedure
+
+Write output value.
+
+Read register.
+
+### Expected Result
+
+Correct value returned.
+
+---
+
+## GPIO_004
+
+### Name
+
+GPIO_DATA_IN Verification
+
+### Objective
+
+Verify input sampling.
+
+### Procedure
+
+Drive gpio_in.
+
+Read GPIO_DATA_IN.
+
+### Expected Result
+
+Register reflects input pins.
+
+---
+
+## GPIO_005
+
+### Name
+
+GPIO RO Protection
+
+### Objective
+
+Verify GPIO_DATA_IN is read-only.
+
+### Procedure
+
+Attempt write.
+
+### Expected Result
+
+Register value unchanged.
+
+---
+
+## GPIO_006
+
+### Name
+
+GPIO Interrupt Generation
+
+### Objective
+
+Verify interrupt creation.
+
+### Procedure
+
+Generate interrupt event.
+
+### Expected Result
+
+irq_pending set.
+
+gpio_irq asserted.
+
+---
+
+## GPIO_007
+
+### Name
+
+GPIO RW1C Verification
+
+### Objective
+
+Verify interrupt clear operation.
+
+### Procedure
+
+Set irq_pending.
+
+Write:
+
+```
+bit0 = 1
+```
+
+### Expected Result
+
+irq_pending cleared.
+
+---
+
+## GPIO_008
+
+### Name
+
+GPIO Reserved Bits
+
+### Objective
+
+Verify reserved-bit handling.
+
+### Procedure
+
+Write all 1's.
+
+### Expected Result
+
+Reserved bits remain zero.
+
+---
+
+# 5. TIMER Tests
+
+## TIMER_001
+
+### Name
+
+Timer Control Register
+
+### Objective
+
+Verify enable and periodic bits.
+
+---
+
+## TIMER_002
+
+### Name
+
+Timer Load Register
+
+### Objective
+
+Verify programmable load value.
+
+---
+
+## TIMER_003
+
+### Name
+
+Timer Countdown
+
+### Objective
+
+Verify decrement operation.
+
+### Procedure
+
+Load:
+
+```
+10
+```
+
+Enable timer.
+
+### Expected Result
+
+10→9→8→...→0
+
+---
+
+## TIMER_004
+
+### Name
+
+One-Shot Timeout
+
+### Objective
+
+Verify single timeout event.
+
+### Expected Result
+
+Timeout asserted once.
+
+Counter stops.
+
+---
+
+## TIMER_005
+
+### Name
+
+Periodic Reload
+
+### Objective
+
+Verify automatic reload.
+
+### Expected Result
+
+Counter reloads from TIMER_LOAD.
+
+---
+
+## TIMER_006
+
+### Name
+
+Timer Interrupt
+
+### Objective
+
+Verify interrupt generation.
+
+### Expected Result
+
+timer_irq asserted.
+
+---
+
+## TIMER_007
+
+### Name
+
+Timer RW1C
+
+### Objective
+
+Verify timeout clear.
+
+### Expected Result
+
+timeout bit cleared.
+
+---
+
+## TIMER_008
+
+### Name
+
+Timer RO Register
+
+### Objective
+
+Verify TIMER_COUNT protection.
+
+### Expected Result
+
+Write ignored.
+
+---
+
+# 6. DMA Tests
+
+## DMA_001
+
+### Name
+
+DMA Configuration
+
+### Objective
+
+Verify source, destination and size registers.
+
+---
+
+## DMA_002
+
+### Name
+
+DMA Start
+
+### Objective
+
+Verify start operation.
+
+### Procedure
+
+Program DMA.
+
+Set START.
+
+### Expected Result
+
+DMA enters BUSY state.
+
+---
+
+## DMA_003
+
+### Name
+
+DMA Busy State
+
+### Objective
+
+Verify busy indication.
+
+### Expected Result
+
+busy = 1 during transfer.
+
+---
+
+## DMA_004
+
+### Name
+
+DMA Completion
+
+### Objective
+
+Verify transfer completion.
+
+### Expected Result
+
+done = 1
+
+busy = 0
+
+---
+
+## DMA_005
+
+### Name
+
+DMA Interrupt
+
+### Objective
+
+Verify DMA interrupt.
+
+### Expected Result
+
+dma_irq asserted.
+
+---
+
+## DMA_006
+
+### Name
+
+DMA Done Clear
+
+### Objective
+
+Verify DONE RW1C behavior.
+
+### Expected Result
+
+done bit cleared.
+
+---
+
+## DMA_007
+
+### Name
+
+DMA Error Injection
+
+### Objective
+
+Verify error handling.
+
+### Expected Result
+
+error bit asserted.
+
+---
+
+## DMA_008
+
+### Name
+
+DMA Error Clear
+
+### Objective
+
+Verify ERROR RW1C behavior.
+
+### Expected Result
+
+error cleared.
+
+---
+
+# 7. APB Tests
+
+## APB_001
+
+### Name
+
+Single Write
+
+### Objective
+
+Verify APB write transaction.
+
+---
+
+## APB_002
+
+### Name
+
+Single Read
+
+### Objective
+
+Verify APB read transaction.
+
+---
+
+## APB_003
+
+### Name
+
+Back-to-Back Writes
+
+### Objective
+
+Verify consecutive writes.
+
+---
+
+## APB_004
+
+### Name
+
+Back-to-Back Reads
+
+### Objective
+
+Verify consecutive reads.
+
+---
+
+## APB_005
+
+### Name
+
+Mixed Read Write
+
+### Objective
+
+Verify alternating accesses.
+
+---
+
+## APB_006
+
+### Name
+
+Invalid Address
+
+### Objective
+
+Verify PSLVERR generation.
+
+---
+
+# 8. AXI-Lite Tests
+
+## AXI_001
+
+### Name
+
+Single Write
+
+### Objective
+
+Verify AXI write transaction.
+
+---
+
+## AXI_002
+
+### Name
+
+Single Read
+
+### Objective
+
+Verify AXI read transaction.
+
+---
+
+## AXI_003
+
+### Name
+
+Write Through Bridge
+
+### Objective
+
+Verify AXI-to-APB conversion.
+
+---
+
+## AXI_004
+
+### Name
+
+Read Through Bridge
+
+### Objective
+
+Verify AXI-to-APB conversion.
+
+---
+
+## AXI_005
+
+### Name
+
+Invalid Address Access
+
+### Objective
+
+Verify SLVERR response.
+
+---
+
+## AXI_006
+
+### Name
+
+Back-to-Back Transactions
+
+### Objective
+
+Verify multiple transfers.
+
+---
+
+# 9. Interrupt Tests
+
+## IRQ_001
+
+GPIO Interrupt
+
+---
+
+## IRQ_002
+
+Timer Interrupt
+
+---
+
+## IRQ_003
+
+DMA Interrupt
+
+---
+
+## IRQ_004
+
+Interrupt Clear Sequence
+
+### Objective
+
+Verify assertion and deassertion behavior.
+
+---
+
+# 10. Integration Tests
+
+## SOC_001
+
+### Name
+
+GPIO + Timer Operation
+
+### Objective
+
+Verify simultaneous operation.
+
+---
+
+## SOC_002
+
+### Name
+
+GPIO + DMA Operation
+
+### Objective
+
+Verify simultaneous operation.
+
+---
+
+## SOC_003
+
+### Name
+
+Timer + DMA Operation
+
+### Objective
+
+Verify simultaneous operation.
+
+---
+
+## SOC_004
+
+### Name
+
+Full SoC Register Sweep
+
+### Objective
+
+Access every register.
+
+---
+
+## SOC_005
+
+### Name
+
+Full SoC Smoke Test
+
+### Objective
+
+Exercise all blocks in one test.
+
+---
+
+# 11. Regression Plan
+
+Level 1
+
+Smoke Regression
+
+```
+RESET tests
+GPIO basic tests
+TIMER basic tests
+DMA basic tests
+```
+
+Level 2
+
+Block Regression
+
+```
+All GPIO tests
+All TIMER tests
+All DMA tests
+```
+
+Level 3
+
+SoC Regression
+
+```
+All APB tests
+All AXI tests
+All Interrupt tests
+All Integration tests
+```
+
+---
+
+# 12. Exit Criteria
+
+Verification is complete when:
+
+* All planned tests pass
+* No open functional bugs
+* No protocol violations
+* Coverage goals achieved
+* Regression passes cleanly
+
+End of Document

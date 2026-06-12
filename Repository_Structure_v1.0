@@ -1,0 +1,105 @@
+mini_soc/
+│
+├── README.md
+│
+├── docs/
+│   │
+│   ├── MINI_SOC_SPEC_v1.0.md
+│   ├── RAS_v1.0.md
+│   ├── VPLAN_v1.0.md
+│   ├── TESTPLAN_v1.0.md
+│   ├── VERIFICATION_ARCHITECTURE_v1.0.md
+│   ├── COVERAGE_PLAN_v1.0.md
+│   ├── PROJECT_ROADMAP_v1.0.md
+│   └── APB_IF_SPEC_v1.0.md
+│
+├── rtl/
+│   │
+│   ├── interfaces/
+│   │   ├── apb_if.sv
+│   │   └── axi_lite_if.sv
+│   │
+│   ├── gpio/
+│   │   └── gpio_apb.sv
+│   │
+│   ├── timer/
+│   │   └── timer_apb.sv
+│   │
+│   ├── dma/
+│   │   └── dma_apb.sv
+│   │
+│   ├── interconnect/
+│   │   └── apb_decoder.sv
+│   │
+│   ├── bridge/
+│   │   └── axi2apb_bridge.sv
+│   │
+│   └── top/
+│       └── mini_soc_top.sv
+│
+├── tb/
+│   │
+│   ├── interfaces/
+│   │
+│   ├── transactions/
+│   │   ├── apb_transaction.sv
+│   │   └── axi_transaction.sv
+│   │
+│   ├── bfm/
+│   │   ├── apb_master_bfm.sv
+│   │   └── axi_master_bfm.sv
+│   │
+│   ├── monitor/
+│   │   ├── apb_monitor.sv
+│   │   └── axi_monitor.sv
+│   │
+│   ├── scoreboard/
+│   │   └── scoreboard.sv
+│   │
+│   ├── coverage/
+│   │   └── coverage.sv
+│   │
+│   ├── assertions/
+│   │   ├── apb_assertions.sv
+│   │   └── axi_assertions.sv
+│   │
+│   ├── env/
+│   │
+│   ├── common/
+│   │   ├── defines.svh
+│   │   ├── params_pkg.sv
+│   │   └── utils_pkg.sv
+│   │
+│   └── tb_top.sv
+│
+├── tests/
+│   │
+│   ├── reset/
+│   │
+│   ├── gpio/
+│   │
+│   ├── timer/
+│   │
+│   ├── dma/
+│   │
+│   ├── apb/
+│   │
+│   ├── axi/
+│   │
+│   ├── irq/
+│   │
+│   └── soc/
+│
+├── sim/
+│   │
+│   ├── run.f
+│   ├── Makefile
+│   ├── waves/
+│   ├── logs/
+│   └── cov/
+│
+└── results/
+    │
+    ├── regressions/
+    ├── coverage/
+    └── reports/

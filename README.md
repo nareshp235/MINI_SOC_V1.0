@@ -303,6 +303,204 @@ Coverage Closure
 Project Signoff
 ```
 
+# Documentation Guide
+
+The project documentation is organized to mirror a real SoC verification project flow. Each document serves a specific purpose and should be read in the order listed below.
+
+---
+
+## 1. MINI_SOC_SPEC_v1.0
+
+Purpose:
+
+System-level design specification of the Mini SoC.
+
+Contents:
+
+* SoC architecture
+* Block diagram
+* Bus architecture
+* Address map
+* GPIO specification
+* Timer specification
+* DMA specification
+* Interrupt architecture
+* Reset behavior
+
+Why it exists:
+
+This is the primary design document that explains what the SoC is expected to do.
+
+Read this first.
+
+---
+
+## 2. RAS_v1.0 (Register Architecture Specification)
+
+Purpose:
+
+Defines all programmer-visible registers.
+
+Contents:
+
+* Register addresses
+* Register layouts
+* Field definitions
+* Access permissions
+* Reset values
+* Hardware/software behavior
+
+Why it exists:
+
+This document is the source of truth for register implementation and register verification.
+
+Read this second.
+
+---
+
+## 3. VPLAN_v1.0 (Verification Plan)
+
+Purpose:
+
+Defines what must be verified.
+
+Contents:
+
+* Verification objectives
+* Feature verification requirements
+* Protocol verification requirements
+* Interrupt verification requirements
+* Scoreboard requirements
+* Coverage goals
+
+Why it exists:
+
+This document answers the question:
+
+"What needs to be verified?"
+
+Read this third.
+
+---
+
+## 4. TESTPLAN_v1.0
+
+Purpose:
+
+Defines the complete testcase list.
+
+Contents:
+
+* Test IDs
+* Test descriptions
+* Verification procedures
+* Expected results
+* Pass criteria
+
+Examples:
+
+* GPIO_001
+* TIMER_003
+* DMA_004
+* APB_006
+* AXI_005
+
+Why it exists:
+
+This document converts verification requirements into executable tests.
+
+Read this fourth.
+
+---
+
+## 5. VERIFICATION_ARCHITECTURE_v1.0
+
+Purpose:
+
+Defines how the verification environment is constructed.
+
+Contents:
+
+* BFMs
+* Monitors
+* Scoreboards
+* Assertions
+* Coverage collectors
+* Transaction objects
+* Directory structure
+
+Why it exists:
+
+This document answers:
+
+"How will the verification environment be built?"
+
+Read this fifth.
+
+---
+
+## 6. COVERAGE_PLAN_v1.0
+
+Purpose:
+
+Defines verification completeness metrics.
+
+Contents:
+
+* Register coverage
+* Field coverage
+* APB coverage
+* AXI coverage
+* Interrupt coverage
+* DMA state coverage
+* Cross coverage
+
+Why it exists:
+
+This document answers:
+
+"How do we know verification is complete?"
+
+Read this sixth.
+
+---
+
+## 7. PROJECT_ROADMAP_v1.0
+
+Purpose:
+
+Defines project execution order.
+
+Contents:
+
+* Development phases
+* Learning objectives
+* Deliverables
+* Success criteria
+* UVM migration plan
+
+Why it exists:
+
+This document provides the implementation roadmap from project start through final signoff.
+
+Read this last before beginning implementation.
+
+---
+
+# Recommended Reading Order
+
+For a new engineer joining the project:
+
+1. MINI_SOC_SPEC_v1.0
+2. RAS_v1.0
+3. VPLAN_v1.0
+4. TESTPLAN_v1.0
+5. VERIFICATION_ARCHITECTURE_v1.0
+6. COVERAGE_PLAN_v1.0
+7. PROJECT_ROADMAP_v1.0
+
+Following this order provides a complete understanding of the design, verification strategy, implementation approach, and project execution plan.
+
 ---
 
 # Learning Roadmap
